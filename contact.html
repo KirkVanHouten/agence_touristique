@@ -1,0 +1,41 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Agence touristique de Tourcoing</h1> 
+    <hr>
+    <h2>Menu</h2>
+    <nav>
+     <a href="index.html">Accueil</a>
+     <a href="perso.html">Espace perso</a>
+     <a href="destinations.html">Destinations</a>
+     <a href="voyage_audio.html">Voyage virtuel audio</a>
+     <a href="voyage_video.html">Voyage virtuel vidéo</a>
+     <a href="contact.html">Contact</a>
+    </nav>
+    <hr>
+    <form method="post">
+        <p>
+            <label for="nom">Nom et Prénom</label>
+            <input type="text" id="nom" required>
+        </p>
+        <p>
+            <label for="email">Adresse mail</label>
+            <input type="email" id="email" required>
+        </p>
+        <p>
+            <label for="tel">Numéro de téléphone</label>
+            <input type="tel" id="tel" pattern="[0]{1}[0-9]{9}" required>
+        </p>
+        <p>
+            <label for="msg">Message</label>
+            <input type="text" id="msg" required>
+        </p>
+        <button>Envoyer</button>
+    </form>
+</body>
+</html>
