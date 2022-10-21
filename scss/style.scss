@@ -1,0 +1,201 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+body{
+    font-family: 'Roboto';
+    display: flex;
+    flex-direction:column;
+    align-items: center;
+}
+h1{
+    text-align: center;
+}
+nav{
+    height: 7.5vh;
+    display: flex;
+    border-radius: 20px;
+    width: 80%;
+    justify-content: center;
+    position: fixed;
+}
+nav a{
+    text-decoration: none;
+    color: black;
+    padding: 2.6vh;
+    transition-duration: 0.3s;
+}
+nav a:hover{
+    background-color: #e9dccf; 
+}
+nav>a:first-child:hover{
+    border-bottom-left-radius: 20px;
+    border-top-left-radius: 20px;
+}
+nav>a:last-child:hover{
+    border-bottom-right-radius: 20px;
+    border-top-right-radius: 20px;
+}
+nav>div{
+    display: flex;
+    flex-direction: column;
+}
+thead>tr:last-child>th{
+    padding-top: 20px;
+}
+table>tr:last-child>td:first-child{
+    border-top-left-radius: 20px;
+    color: red;
+}
+.dropdown{
+    float: left;
+    overflow: hidden;
+    width: 11.5%;
+}
+.dropdown-menu{
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 10%;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    top:3.85vw;
+}
+.dropdown:hover .dropdown-menu{
+    display: block;
+}
+.dropdown:hover>a{
+    background-color: #e3d5ca;
+}
+.dropdown-menu a {
+    float: none;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+  }
+// .card{
+//     border-radius: 10px;
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     width: 50vw;
+//     flex-direction: column;
+//     margin-left: 25vh;
+//     margin-top: 10vw;
+//     height: 55vh;
+//     box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+// }
+
+// .card>ul>li{
+//     font-size:x-large;
+//     margin-top: 5%;
+// }
+
+// .card>ul>li>ul>li{
+//     margin-top: 5%;
+// }
+h2 ,h3, form{
+    margin-top: 7vw;
+}
+table{
+    border-spacing: 0;
+    margin-top: 7vw;
+    border-collapse: collapse;
+    max-width: 80%;
+}
+td{
+    padding: 0%;
+    text-align: center;
+}
+tr:first-child{
+    height: 6vh;
+}
+thead>tr:first-child>th{
+    padding: 0%;
+    background-color: #e3d5ca;
+    text-align: center;
+}
+thead>tr:first-child>th:first-child{
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+}
+thead>tr:first-child>th:last-child{
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+tr>td:first-child{
+    padding: 0 2% 0 2%;
+    width: 15vw;
+}
+
+.circuit{
+    width: 22vw;
+    text-align: start;
+}
+tr>td:nth-child(4), tr>td:last-child{
+    width: 22vw;
+}
+.resa{
+    position: relative;
+}
+
+.resa>button{
+    background-color: #f5ebe0;
+    position: absolute;
+    border: 1px black solid;
+    width: 25%;
+    top: -2vw;
+    left: 100pt;
+    font-family: 'Roboto';
+    height: 40pt;
+    z-index: 1;
+    transition: all 0.3s;
+}
+
+.resa>button:hover{
+    translate: 7% 9%;
+    cursor: pointer;
+}
+
+.resa>div{
+    border: 1px black solid;
+    width: 25%;
+    position: absolute;
+    z-index: 0;
+    top: -1.4vw;
+    left: 110pt;
+    height: 40pt;
+}
+
+body>button{
+    background-color: white;
+    border-radius: 100%;
+    border: 2px rgb(141, 141, 141) solid;
+    width: 60px;
+    height: 60px;
+    margin-left: 47%;
+    margin-top: 5vw;
+}
+
+body>button>a{
+    font-size: 40px;
+    text-decoration: none;
+    color: black;
+}
+
+table>tbody>tr:nth-child(odd){
+    background-color: white;
+    transition: all 0.3s;
+}
+
+table>tbody>tr:nth-child(odd):hover{
+    background-color: rgb(245, 245, 245);
+}
+
+table>tbody>tr:nth-child(even){
+    background-color: rgb(240, 240, 240);
+    transition: all 0.3s;
+}
+
+table>tbody>tr:nth-child(even):hover{
+    background-color: rgb(230, 230, 230);
+}

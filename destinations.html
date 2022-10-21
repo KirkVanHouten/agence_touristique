@@ -3,35 +3,45 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
     <title>Document</title>
 </head>
 <body>
-    <h1>Agence touristique de Tourcoing</h1> 
-    <hr>
-    <h2>Menu</h2>
     <nav>
      <a href="index.html">Accueil</a>
-     <a href="perso.html">Espace perso</a>
+     <div class="dropdown">
+        <a href="">Espace perso &#8595;</a>
+        <div class="dropdown-menu">
+            <a href="">Connexion</a>
+            <a href="">Mes informations</a>
+            <a href="">Messagerie</a>
+            <a href="">Historique</a>
+        </div>
+     </div>
      <a href="destinations.html">Destinations</a>
      <a href="voyage_audio.html">Voyage virtuel audio</a>
      <a href="voyage_video.html">Voyage virtuel vidéo</a>
      <a href="contact.html">Contact</a>
     </nav>
-    <hr>
    <table>
-    <tr>
-        <th>Destination</th>
-        <th>Photo</th>
-        <th>Circuit</th>
-        <th>Tarif</th>
-        <th>Réservation</th>
-    </tr>
-    <tr>
+    <thead>
+        <tr>
+            <th>Destination</th>
+            <th>Photo</th>
+            <th>Circuit</th>
+            <th>Tarif</th>
+            <th>Réservation</th>
+        </tr>
+        <tr>
+            <th></th>
+        </tr>
+    </thead>
+        <tr >
         <td>France</td>
         <td>
             <img style="width:250px;" src="img/fr.jpg" alt="">
         </td>
-        <td>
+        <td class="circuit">
             <ul>
                 <li>Paris</li>
                 <li>Mont Saint Michel</li>
@@ -39,51 +49,71 @@
                 <li>Nice</li>
             </ul>
         </td>
-        <td>2 euros</td>
-        <td><button>Réservation</button></td>
+        <td class="tdToMakeBigger">2 euros</td>
+        <td>
+            <div class="resa">
+                <div></div>
+                <button>Réserver</button>
+            </div>
+        </td>
     </tr>
-    <tr>
+    <tr >
         <td>Italie</td>
         <td>
             <img style="width:250px;" src="img/it.jpg" alt="">
         </td>
-        <td>
+        <td class="circuit">
             <ul>
                 <li>Rome</li>
                 <li>Venise</li>
                 <li>Turin</li>
             </ul>
         </td>
-        <td>2 euros</td>
-        <td><button>Réservation</button></td>
+        <td class="tdToMakeBigger">2 euros</td>
+        <td>
+            <div class="resa">
+                <div></div>
+                <button>Réserver</button>
+            </div>
+        </td>
     </tr>
-    <tr>
+    <tr >
         <td>Islande</td>
         <td>
             <img style="width:250px;" src="img/isl.jpg" alt="">
         </td>
-        <td>
+        <td class="circuit">
             <ul>
                 <li>Neige</li>
             </ul>
         </td>
-        <td>2 euros</td>
-        <td><button>Réservation</button></td>
+        <td class="tdToMakeBigger">2 euros</td>
+        <td>
+            <div class="resa">
+                <div></div>
+                <button>Réserver</button>
+            </div>
+        </td>
     </tr>
     <tr>
         <td>Nouvelle-Zélande</td>
         <td>
             <img style="width:250px;" src="img/nz.jpg" alt="">
         </td>
-        <td>
+        <td class="circuit">
             <ul>
                 <li>Moutons</li>
             </ul>
         </td>
-        <td>2 euros</td>
-        <td><button>Réservation</button></td>
+        <td class="tdToMakeBigger">2 euros</td>
+        <td>
+            <div class="resa">
+                <div></div>
+                <button>Réserver</button>
+            </div>
+        </td>
     </tr>
    </table> 
-   <a href="#">Revenir au début de la page &#8593;</a>
+   <button><a href="#">&#8593;</a></button>
 </body>
 </html>
