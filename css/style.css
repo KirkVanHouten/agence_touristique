@@ -14,7 +14,8 @@ nav {
   border-radius: 20px;
   width: 80%;
   justify-content: center;
-  position: fixed; }
+  position: fixed;
+  background-color: white; }
 
 nav a {
   text-decoration: none;
@@ -36,9 +37,6 @@ nav > a:last-child:hover {
 nav > div {
   display: flex;
   flex-direction: column; }
-
-thead > tr:last-child > th {
-  padding-top: 20px; }
 
 table > tr:last-child > td:first-child {
   border-top-left-radius: 20px;
@@ -75,11 +73,14 @@ table > tr:last-child > td:first-child {
 h2, h3, form {
   margin-top: 7vw; }
 
-table {
+#main {
   border-spacing: 0;
   margin-top: 7vw;
   border-collapse: collapse;
   max-width: 80%; }
+
+table {
+  border-spacing: 0; }
 
 td {
   padding: 0%;
@@ -91,7 +92,8 @@ tr:first-child {
 thead > tr:first-child > th {
   padding: 0%;
   background-color: #e3d5ca;
-  text-align: center; }
+  text-align: center;
+  margin: 0%; }
 
 thead > tr:first-child > th:first-child {
   border-top-left-radius: 20px;
@@ -100,6 +102,9 @@ thead > tr:first-child > th:first-child {
 thead > tr:first-child > th:last-child {
   border-top-right-radius: 20px;
   border-bottom-right-radius: 20px; }
+
+thead > tr:last-child {
+  height: 2em; }
 
 tr > td:first-child {
   padding: 0 2% 0 2%;
@@ -140,16 +145,19 @@ tr > td:nth-child(4), tr > td:last-child {
   left: 110pt;
   height: 40pt; }
 
-body > button {
+#up {
   background-color: white;
   border-radius: 100%;
   border: 2px #8d8d8d solid;
   width: 60px;
   height: 60px;
-  margin-left: 47%;
+  margin-left: 55em;
+  margin-bottom: 3em;
+  position: fixed;
+  bottom: 0;
   margin-top: 5vw; }
 
-body > button > a {
+#up > a {
   font-size: 40px;
   text-decoration: none;
   color: black; }
@@ -167,5 +175,32 @@ table > tbody > tr:nth-child(even) {
 
 table > tbody > tr:nth-child(even):hover {
   background-color: #e6e6e6; }
+
+#add_new {
+  margin-bottom: 1em;
+  background-color: #eed5bc;
+  border: none;
+  width: 12em;
+  height: 3em;
+  border-radius: 10px;
+  transition: all 0.1s; }
+
+#add_new:hover {
+  cursor: pointer; }
+
+form > input, form > textarea {
+  margin-bottom: 2em; }
+
+.actions {
+  width: 10em; }
+
+.actions > span:first-child {
+  margin-right: 1em; }
+
+.actions > span:hover {
+  cursor: pointer; }
+
+#imgChoosed {
+  max-width: 20em; }
 
 /*# sourceMappingURL=style.css.map */
