@@ -69,7 +69,7 @@ const destinations = `
 
 // Constant variable which contains the html code of the Espace perso/Mes informations page
 const perso = `
-    <div class="card mt-5" p-lg-5>
+    <div class="card mt-5" id="card">
         <div class="card-body d-flex justify-content-center flex-column align-items-center">
         <h3 class="card-title mb-4">Espace perso</h3>
         <ul class="card-text">
@@ -136,7 +136,7 @@ const voyage_video = `
 
 // Constant variable which contains the html code of the Contact page
 const contact = `
-    <div class="card mt-4" style="width:25rem;">
+    <div class="card mt-4" id="card">
     <form class="card-body" method="post">
         <div class="mb-3">
             <label class="form-label" for="nom">Nom et Prénom</label>
@@ -212,7 +212,7 @@ function readFile(file){
 
 // Sets the current page to the destInfos page and sets the registering of a destination's info into a new destination object
 function newDest(){
-    switchPage(destInfos);
+    document.getElementById('main').innerHTML = destInfos;
     let form = document.getElementById('formEvent');
     document.getElementById('photo').required = true;
     document.getElementById('submitDestInfos').innerText = "Créer";
@@ -231,7 +231,7 @@ function newDest(){
         defaultDestinations.push(newDest);
 
         //after creating the new destination, we push the user back to the destination page
-        setupDestinations();
+        setupDestinations(false);
     })
 }
 
@@ -240,12 +240,12 @@ function delDest(id){
     // we filter the destinations list to only keep the destinations with an id different from the one
     // the user wants to delete
     defaultDestinations = defaultDestinations.filter(dest => dest.id!=id);
-    setupDestinations();
+    setupDestinations(false);
 }
 
 // Displays the destInfos page and loads all the informations of the destination the user wants to edit
 function editDest(id){
-    switchPage(destInfos);
+    document.getElementById('main').innerHTML = destInfos;
     document.getElementById('submitDestInfos').innerText = "Modifier"
     let destToEdit = defaultDestinations[defaultDestinations.findIndex(value => value.getId == id)];
     // we set the required attribute to false for the picture because when we load the already existing picture,
@@ -271,13 +271,17 @@ function editDest(id){
         destToEdit.setCircuit = circuitFiltered;
         destToEdit.setDestination = form.elements['destination'].value;
         destToEdit.setTarif = form.elements['tarif'].value;
-        setupDestinations();
+        setupDestinations(false);
     });
 
 }
 
-function setupDestinations(){
-    switchPage(destinations);
+function setupDestinations(navbarNeedsToClose = true){
+    if(navbarNeedsToClose){
+        switchPage(destinations);
+    } else {
+        document.getElementById('main').innerHTML = destinations;
+    }
     for(const dest of defaultDestinations){
         let rowToAdd = `
         <tr>
@@ -314,10 +318,13 @@ function setupDestinations(){
 // Changes the 'main' div innerHtml to html code of the page the user wants to visit
 function switchPage(page){
     //the next three lines untoggle the navbar if it has been toggled (only for tablet and mobile modes)
-    const menuToggle = document.getElementById('navbarSupportedContent');
-    const bsCollapse = new bootstrap.Collapse(menuToggle);
-    console.log(bsCollapse);
-    bsCollapse.toggle();
+    if(window.screen.width<992){
+        const menuToggle = document.getElementById('navbarSupportedContent');
+        const bsCollapse = new bootstrap.Collapse(menuToggle);
+        console.log(bsCollapse);
+        bsCollapse.toggle();
+    }
+    
 
     document.getElementById('main').innerHTML = page;
 }

@@ -2,4 +2,10 @@
   max-width: 20em;
 }
 
+@media (min-width: 576px) {
+  #card {
+    min-width: 500px;
+  }
+}
+
 /*# sourceMappingURL=style.css.map */
