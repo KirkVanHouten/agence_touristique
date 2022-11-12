@@ -33,6 +33,7 @@ let defaultDestinations = [
 
 
 const index = `
+    <div class="ms-4 mt-4">
     <h2>Description générale</h2>
     <blockquote>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto, dicta? Quae quisquam, consequuntur veritatis suscipit quidem, natus optio aut adipisci cupiditate, fuga eveniet! Neque nemo dolorem aut aliquid corrupti quos.</blockquote>
     <p>
@@ -40,7 +41,8 @@ const index = `
     </p>
     <hr>
     <h3>Infos pratiques</h3>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis laudantium illum eos suscipit nisi explicabo qui, tempora sapiente dolor distinctio ipsa aperiam alias accusamus, ex dolores molestias delectus odit ipsam?</p>"
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis laudantium illum eos suscipit nisi explicabo qui, tempora sapiente dolor distinctio ipsa aperiam alias accusamus, ex dolores molestias delectus odit ipsam?</p>
+    </div>
 `;
 
 const destinations = `
