@@ -1,3 +1,4 @@
+// Instantiation of defaults destinations
 let defaultDestinations = [
     new Destination(
         'France', 
@@ -31,7 +32,7 @@ let defaultDestinations = [
 ];
 
 
-
+// Constant variable which contains the html code of the index page
 const index = `
     <div class="ms-4 mt-4">
     <h2>Description générale</h2>
@@ -45,8 +46,9 @@ const index = `
     </div>
 `;
 
+// Constant variable which contains the html code of the Destinations page
 const destinations = `
-    <button id="add_new" onclick="switchPage('nvDest')">Nouvelle destination</button>
+    <button id="add_new" onclick="newDest()">Nouvelle destination</button>
     <table id="destinations">
     <thead>
         <tr>
@@ -65,6 +67,7 @@ const destinations = `
     <button id="up"><a href="#">&#8593;</a></button>
 `;
 
+// Constant variable which contains the html code of the Espace perso/Mes informations page
 const perso = `
     <div class="card">
         <h1>Espace perso</h1>
@@ -83,6 +86,7 @@ const perso = `
     </div>
 `;
 
+// Constant variable which contains the html code of the Voyage virtuel audio page
 const voyage_audio = `
     <div>
         <h2>Sons de crickets</h2>
@@ -107,6 +111,7 @@ const voyage_audio = `
     </div>
 `;
 
+// Constant variable which contains the html code of the Voyage virtuel video page
 const voyage_video = `
     <h3>Indonésie</h3>
     <video controls autoplay width="320px" height="240px" muted>
@@ -121,6 +126,7 @@ const voyage_video = `
 
 `;
 
+// Constant variable which contains the html code of the Contact page
 const contact = `
     <form method="post">
         <p>
@@ -130,7 +136,7 @@ const contact = `
         <p>
             <label for="email">Adresse mail</label>
             <input type="email" id="email" required>
-        </p>
+        </p>    
         <p>
             <label for="tel">Numéro de téléphone</label>
             <input type="tel" id="tel" pattern="[0]{1}[0-9]{9}" required>
@@ -143,7 +149,8 @@ const contact = `
     </form>
 `
 
-const nvDest = `
+// Constant variable which contains the html code of the Nouvelle destinations/modification d'une destination page
+const destInfos = `
     <form method="post" class="formEvent">
         <label for="destination">Destination : </label><br>
         <input type="text" id="destination" name="destination" required><br>
@@ -154,48 +161,24 @@ const nvDest = `
         <textarea id="circuit" name="circuit" required placeholder="Activité1,Activité2,Activité3,..."></textarea><br>
         <label for="tarif">Prix : </label><br>
         <input type="number" id="tarif" name="tarif" required><br>
-        <input type="submit" value="Créer">
+        <input id="submitDestInfos" type="submit">
     </form>
 `
 
-const updateDest = `
-    <form method="post" class="formEvent">
-        <label for="destination">Destination : </label><br>
-        <input type="text" id="destination" name="destination" required><br>
-        <label for="photo">Photo : </label><br>
-        <img id="imgChoosed" src=""/><br>
-        <input onchange="showImage()" type="file" id="photo" name="photo"><br>
-        <label for="circuit">Circuit (séparer les activités par des virgules) : </label><br>
-        <textarea id="circuit" name="circuit" required placeholder="Activité1,Activité2,Activité3,..."></textarea><br>
-        <label for="tarif">Prix : </label><br>
-        <input type="number" id="tarif" name="tarif" required><br>
-        <input type="submit" value="Enregistrer">
-    </form>
-`
-
-var currentPage = '';
-window.onload = () => {
-if(!currentPage){
-    console.log(document.getElementsByTagName('div'));
+// Sets the default page displayed to 'index' page, we have to use window.onload to be able to find the element with
+// 'main' id (without it, the action is done before the html page is loaded and it causes an error)
+window.onload = (() => {
     document.getElementById('main').innerHTML = index;
-}
+})
 
-    
-let linksInNavbar = document.getElementById('navbar').children;
-for(const a of linksInNavbar){
-    if(a.children.length == 0){
-        console.log(a.innerHTML)
-        // a.addEventListener('click', switchPage(a.tagName));
-    } 
-}
-}
-
+// Displays the stored image of the destination for the destination creation/modification page
 async function showImage(){
     let file = document.getElementById('photo').files[0];
     let fileLink = await readFile(file);
     document.getElementById('imgChoosed').src = fileLink;
 }
 
+// Reads the image file uploaded by the user in the destination creation/modification page
 function readFile(file){
     return new Promise((resolve, reject) => {
       var fr = new FileReader();  
@@ -207,14 +190,46 @@ function readFile(file){
     });
 }
 
+// Sets the current page to the destInfos page and sets the registering of a destination's info into a new destination object
+function newDest(){
+    switchPage('destInfos');
+    let form = document.getElementsByClassName('formEvent')[0];
+    document.getElementById('photo').required = true;
+    document.getElementById('submitDestInfos').value = "Créer";
+    form.addEventListener('submit', async (event) => {
+        // we do event.preventDefault to prevent the page to reload when the user sends the form
+        event.preventDefault();
+        //the next five lines generate an array containing all steps of a 'circuit' 
+        let circuitTmp = form.elements["circuit"].value;
+        let circuitSplitted = circuitTmp.split(',');
+        let circuitFiltered = circuitSplitted.filter((el) => {
+            return !!el;
+        });
+        let file    = await readFile(document.getElementById('photo').files[0]);
+        let newDest = new Destination(form.elements['destination'].value, file,
+            circuitFiltered, form.elements['tarif'].value, defaultDestinations[defaultDestinations.length-1].getId+1);
+        defaultDestinations.push(newDest);
+
+        //after creating the new destination, we push the user back to the destination page
+        switchPage('destinations');
+    })
+}
+
+// Deletes a destination from the destinations page
 function delDest(id){
+    // we filter the destinations list to only keep the destinations with an id different from the one
+    // the user wants to delete
     defaultDestinations = defaultDestinations.filter(dest => dest.id!=id);
     switchPage('destinations');
 }
 
+// Displays the destInfos page and loads all the informations of the destination the user wants to edit
 function editDest(id){
-    switchPage('updateDest');
+    switchPage('destInfos');
+    document.getElementById('submitDestInfos').value = "Modifier"
     let destToEdit = defaultDestinations[defaultDestinations.findIndex(value => value.getId == id)];
+    // we set the required attribute to false for the picture because when we load the already existing picture,
+    // it's nnot possible to set it in the file input
     document.getElementById('photo').required = false;
     document.getElementById('destination').value = destToEdit.getDestination;
     document.getElementById('imgChoosed').src    = destToEdit.getPhoto;
@@ -241,60 +256,45 @@ function editDest(id){
 
 }
 
+function setupDestinations(){
+    switchPage('destinations');
+    for(const dest of defaultDestinations){
+        let rowToAdd = `
+        <tr>
+            <td>` + dest.getDestination+`</td>
+            <td>
+                <img style="width:250px;" src="`+ dest.getPhoto +`" alt="">
+            </td>
+            <td class="circuit">
+                <ul>`;
+                    for(const i in dest.getCircuit){
+                        rowToAdd+="<li>"+dest.getCircuit[i]+"</li>";
+                    }
+                rowToAdd += 
+                `</ul>
+            </td>
+            <td class="tdToMakeBigger">` + dest.getTarif + ` euros</td>
+            <td>
+                <div class="actions">
+                    <span onclick="editDest(${dest.getId})" class="material-icons">edit_note</span>
+                    <span onclick="delDest(${dest.getId})" class="material-icons">delete</span>
+                </div>
+            </td>
+            <td>
+                <div class="resa">
+                    <div></div>
+                    <button>Réserver</button>
+                </div>
+            </td>
+        </tr>`
+        document.getElementById('destinations').innerHTML += rowToAdd;
+    }
+}
+
+// Changes the 'main' div innerHtml to html code of the page the user wants to visit
 function switchPage(page){
+    // we use eval method to transform the value of the page variable to the value of the variable named after the page value
+    // ex : if page = index, eval(page) would be equal to index constant (the html code of the index page)
     document.getElementById('main').innerHTML = eval(page);
-    currentPage = page;
-    if(currentPage == 'destinations'){
-        for(const dest of defaultDestinations){
-            let rowToAdd = `
-            <tr>
-                <td>` + dest.getDestination+`</td>
-                <td>
-                    <img style="width:250px;" src="`+ dest.getPhoto +`" alt="">
-                </td>
-                <td class="circuit">
-                    <ul>`;
-                        for(const i in dest.getCircuit){
-                            rowToAdd+="<li>"+dest.getCircuit[i]+"</li>";
-                        }
-                    rowToAdd += 
-                    `</ul>
-                </td>
-                <td class="tdToMakeBigger">` + dest.getTarif + ` euros</td>
-                <td>
-                    <div class="actions">
-                        <span onclick="editDest(${dest.getId})" class="material-icons">edit_note</span>
-                        <span onclick="delDest(${dest.getId})" class="material-icons">delete</span>
-                    </div>
-                </td>
-                <td>
-                    <div class="resa">
-                        <div></div>
-                        <button>Réserver</button>
-                    </div>
-                </td>
-            </tr>`
-            document.getElementById('destinations').innerHTML += rowToAdd;
-        }
-    }
-    else if(currentPage == 'nvDest'){
-        let form = document.getElementsByClassName('formEvent')[0];
-        document.getElementById('photo').required = true;
-        form.addEventListener('submit', async (event) => {
-            event.preventDefault();
-            let circuitTmp = form.elements["circuit"].value;
-            console.log(circuitTmp);
-            let circuitSplitted = circuitTmp.split(',');
-            console.log(circuitSplitted);
-            let circuitFiltered = circuitSplitted.filter((el) => {
-                return !!el;
-            });
-            let file    = await readFile(document.getElementById('photo').files[0]);
-            let newDest = new Destination(form.elements['destination'].value, file,
-                circuitFiltered, form.elements['tarif'].value, defaultDestinations[defaultDestinations.length-1].getId+1);
-            defaultDestinations.push(newDest);
-            switchPage('destinations');
-        })
-    }
 }
 

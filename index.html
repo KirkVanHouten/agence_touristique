@@ -12,29 +12,6 @@
     <title>Document</title>
 </head>
 <body>
-   <!-- <nav id="navbar" class="navbar navbar-expand-lg bg-light">
-    <div class="container-fluid">
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-    <li><a onclick="switchPage('index')" class="nav-item">Accueil</a></li>
-    <li class="nav-item dropdown">
-
-       <a class="nav-link dropdown-toggle" role="button">Espace perso</a>
-       <ul class="dropdown-menu">
-           <li><a class="dropdown-item" ref="">Connexion</a></li>
-           <li><a class="dropdown-item" ref="">Mes informations</a></li>
-           <li><a class="dropdown-item" ref="">Messagerie</a></li>
-           <li><a class="dropdown-item" ref="">Historique</a></li>
-       </ul>
-    </li>
-    <li><a onclick="switchPage('destinations')">Destinations</a></li>
-    <li><a onclick="switchPage('voyage_audio')">Voyage virtuel audio</a></li>
-    <li><a onclick="switchPage('voyage_video')">Voyage virtuel vidéo</a></li>
-    <li><a onclick="switchPage('contact')">Contact</a></li>
-    </ul>
-    </div>
-    </div>
-   </nav> -->
    <nav class="navbar navbar-expand-lg bg-light d-flex justify-content-center">
     <div class="container-fluid">
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -54,7 +31,7 @@
                 </ul>
             </li>
             <li class="nav-item">
-                <a class="nav-link active"  onclick="switchPage('destinations')" aria-current="page" href="#">Destinations</a>
+                <a class="nav-link active"  onclick="setupDestinations()" aria-current="page" href="#">Destinations</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link active" onclick="switchPage('voyage_audio')" aria-current="page" href="#">Voyage virtuel audio</a>
