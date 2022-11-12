@@ -69,7 +69,7 @@ const destinations = `
 
 // Constant variable which contains the html code of the Espace perso/Mes informations page
 const perso = `
-    <div class="card mt-5" style="width: 25rem; height:20rem">
+    <div class="card mt-5" p-lg-5>
         <div class="card-body d-flex justify-content-center flex-column align-items-center">
         <h3 class="card-title mb-4">Espace perso</h3>
         <ul class="card-text">
@@ -212,7 +212,7 @@ function readFile(file){
 
 // Sets the current page to the destInfos page and sets the registering of a destination's info into a new destination object
 function newDest(){
-    switchPage('destInfos');
+    switchPage(destInfos);
     let form = document.getElementById('formEvent');
     document.getElementById('photo').required = true;
     document.getElementById('submitDestInfos').innerText = "Créer";
@@ -245,7 +245,7 @@ function delDest(id){
 
 // Displays the destInfos page and loads all the informations of the destination the user wants to edit
 function editDest(id){
-    switchPage('destInfos');
+    switchPage(destInfos);
     document.getElementById('submitDestInfos').innerText = "Modifier"
     let destToEdit = defaultDestinations[defaultDestinations.findIndex(value => value.getId == id)];
     // we set the required attribute to false for the picture because when we load the already existing picture,
@@ -277,7 +277,7 @@ function editDest(id){
 }
 
 function setupDestinations(){
-    switchPage('destinations');
+    switchPage(destinations);
     for(const dest of defaultDestinations){
         let rowToAdd = `
         <tr>
@@ -313,8 +313,12 @@ function setupDestinations(){
 
 // Changes the 'main' div innerHtml to html code of the page the user wants to visit
 function switchPage(page){
-    // we use eval method to transform the value of the page variable to the value of the variable named after the page value
-    // ex : if page = index, eval(page) would be equal to index constant (the html code of the index page)
-    document.getElementById('main').innerHTML = eval(page);
+    //the next three lines untoggle the navbar if it has been toggled (only for tablet and mobile modes)
+    const menuToggle = document.getElementById('navbarSupportedContent');
+    const bsCollapse = new bootstrap.Collapse(menuToggle);
+    console.log(bsCollapse);
+    bsCollapse.toggle();
+
+    document.getElementById('main').innerHTML = page;
 }
 
