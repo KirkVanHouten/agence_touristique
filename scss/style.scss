@@ -7,3 +7,15 @@
     min-width: 500px;
   }
 }
+
+#jumbo{
+  background-color: rgb(235, 235, 235);
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+#jumbo>img{
+  min-width: 100%;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+}

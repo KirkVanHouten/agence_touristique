@@ -48,22 +48,8 @@ const index = `
 
 // Constant variable which contains the html code of the Destinations page
 const destinations = `
-    <button id="add_new" onclick="newDest()">Nouvelle destination</button>
-    <table id="destinations">
-    <thead>
-        <tr>
-            <th>Destination</th>
-            <th>Photo</th>
-            <th>Circuit</th>
-            <th>Tarif</th>
-            <th>Actions</th>
-            <th>Réservation</th>
-        </tr>
-        <tr>
-            <th></th>
-        </tr>
-    </thead>
-    </table> 
+    <button id="add_new" class="btn btn-primary mt-5 mb-5" onclick="newDest()">Nouvelle destination</button>
+    <div id="destinations"></div>
     <button id="up"><a href="#">&#8593;</a></button>
 `;
 
@@ -284,33 +270,29 @@ function setupDestinations(navbarNeedsToClose = true){
     }
     for(const dest of defaultDestinations){
         let rowToAdd = `
-        <tr>
-            <td>` + dest.getDestination+`</td>
-            <td>
-                <img style="width:250px;" src="`+ dest.getPhoto +`" alt="">
-            </td>
-            <td class="circuit">
-                <ul>`;
-                    for(const i in dest.getCircuit){
-                        rowToAdd+="<li>"+dest.getCircuit[i]+"</li>";
-                    }
-                rowToAdd += 
-                `</ul>
-            </td>
-            <td class="tdToMakeBigger">` + dest.getTarif + ` euros</td>
-            <td>
-                <div class="actions">
-                    <span onclick="editDest(${dest.getId})" class="material-icons">edit_note</span>
-                    <span onclick="delDest(${dest.getId})" class="material-icons">delete</span>
+        <div class="jumbotron mb-5" id="jumbo">
+            <img style="width:250px;" src="`+ dest.getPhoto +`" alt="">
+            
+            <h3 class="ms-4 me-4 display-4 text-center">` + dest.getDestination+`</h3>
+            <div class="d-flex justify-content-center">
+            <ul>`;
+                for(const i in dest.getCircuit){
+                    rowToAdd+="<li>"+dest.getCircuit[i]+"</li>";
+                }
+            rowToAdd += 
+            `</ul>
+            </div>
+            <p class="ms-4 mb-3">Prix : ` + dest.getTarif + ` euros</p>
+            <div class="d-flex justify-content-between mb-1">
+                <div class="ms-4 mb-4">
+                    <button type="button" class="btn btn-success">Réserver</button>
                 </div>
-            </td>
-            <td>
-                <div class="resa">
-                    <div></div>
-                    <button>Réserver</button>
+                <div class="ms-2 me-4 mb-4">
+                    <button type="button" onclick="editDest(${dest.getId})" class="btn btn-primary">Modifier</i></button>
+                    <button type="button" onclick="delDest(${dest.getId})" class="btn btn-danger">Supprimer</i></button>
                 </div>
-            </td>
-        </tr>`
+            </div>
+        </div>`
         document.getElementById('destinations').innerHTML += rowToAdd;
     }
 }
@@ -318,7 +300,7 @@ function setupDestinations(navbarNeedsToClose = true){
 // Changes the 'main' div innerHtml to html code of the page the user wants to visit
 function switchPage(page){
     //the next three lines untoggle the navbar if it has been toggled (only for tablet and mobile modes)
-    if(window.screen.width<992){
+    if(document.documentElement.clientWidth<992){
         const menuToggle = document.getElementById('navbarSupportedContent');
         const bsCollapse = new bootstrap.Collapse(menuToggle);
         console.log(bsCollapse);
