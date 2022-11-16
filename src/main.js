@@ -49,7 +49,9 @@ const index = `
 // Constant variable which contains the html code of the Destinations page
 const destinations = `
     <button id="add_new" class="btn btn-primary mt-5 mb-5" onclick="newDest()">Nouvelle destination</button>
-    <div id="destinations"></div>
+    <div class="container ms-lg-2 me-lg-2">
+        <div id="destinations" class="row justify-content-center"></div>
+    </div>
     <button id="up"><a href="#">&#8593;</a></button>
 `;
 
@@ -270,24 +272,26 @@ function setupDestinations(navbarNeedsToClose = true){
     }
     for(const dest of defaultDestinations){
         let rowToAdd = `
-        <div class="jumbotron mb-5" id="jumbo">
-            <img style="width:250px;" src="`+ dest.getPhoto +`" alt="">
+        <div class="card p-0 col-9 col-sm-8 col-md-8 col-lg-5 col-xxl-3 me-md-4 mb-4" id="dest">
+            <img style="width:320px; height:270px;" src="`+ dest.getPhoto +`" alt="">
+            <div class="card-body">
+                <h4 class="card-title text-center">` + dest.getDestination+`</h3>
+                <h6 class="card-subtitle text-center text-muted ">Prix : ` + dest.getTarif + ` euros</h6>
+                <div class="card-text">
+                    <ul>`;
+                    for(const i in dest.getCircuit){
+                        rowToAdd+="<li>"+dest.getCircuit[i]+"</li>";
+                    }
+                    rowToAdd +=
+                    `</ul>
+                </div>
+            </div> 
             
-            <h3 class="ms-4 me-4 display-4 text-center">` + dest.getDestination+`</h3>
-            <div class="d-flex justify-content-center">
-            <ul>`;
-                for(const i in dest.getCircuit){
-                    rowToAdd+="<li>"+dest.getCircuit[i]+"</li>";
-                }
-            rowToAdd += 
-            `</ul>
-            </div>
-            <p class="ms-4 mb-3">Prix : ` + dest.getTarif + ` euros</p>
-            <div class="d-flex justify-content-between mb-1">
-                <div class="ms-4 mb-4">
+            <div class="card-footer d-flex justify-content-between mb-1 pt-2">
+                <div class="">
                     <button type="button" class="btn btn-success">Réserver</button>
                 </div>
-                <div class="ms-2 me-4 mb-4">
+                <div class="">
                     <button type="button" onclick="editDest(${dest.getId})" class="btn btn-primary">Modifier</i></button>
                     <button type="button" onclick="delDest(${dest.getId})" class="btn btn-danger">Supprimer</i></button>
                 </div>
