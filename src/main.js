@@ -149,22 +149,22 @@ const contact = `
 
 // Constant variable which contains the html code of the Nouvelle destinations/modification d'une destination page
 const destInfos = `
-    <div class="card mt-4" style="width:30rem;">
+    <div class="card mt-4 formForDest">
     <form class="card-body" method="post" id="formEvent">
-        <div class="mb-3">
+        <div class="mb-2">
             <label class="form-label" for="destination">Destination : </label><br>
             <input class="form-control" type="text" id="destination" name="destination" required><br>
         </div>
-        <div class="mb-3">
+        <div class="mb-2">
             <label class="form-label" for="photo">Photo : </label><br>
             <img class="mb-2" id="imgChoosed" src=""/><br>
             <input class="form-control" onchange="showImage()" type="file" id="photo" name="photo"><br>
         </div>
-        <div class="mb-3">
+        <div class="mb-2">
             <label class="form-label" for="circuit">Circuit (séparer les activités par des virgules) : </label><br>
             <textarea class="form-control" id="circuit" name="circuit" required placeholder="Activité1,Activité2,Activité3,..."></textarea><br>
         </div>
-        <div class="mb-3">
+        <div class="mb-2">
             <label class="form-label" for="tarif">Prix : </label><br>
             <input class="form-control" type="number" id="tarif" name="tarif" required><br>
         </div>
@@ -272,7 +272,7 @@ function setupDestinations(navbarNeedsToClose = true){
     }
     for(const dest of defaultDestinations){
         let rowToAdd = `
-        <div class="card p-0 col-9 col-sm-8 col-md-8 col-lg-5 col-xxl-3 me-md-4 mb-4" id="dest">
+        <div class="card p-0 col-10 col-sm-8 col-lg-5 col-xxl-3 me-md-4 mb-4" id="dest">
             <img style="width:320px; height:270px;" src="`+ dest.getPhoto +`" alt="">
             <div class="card-body">
                 <h4 class="card-title text-center">` + dest.getDestination+`</h3>

@@ -26,5 +26,17 @@
     height: 150px;
   }
 }
+.formForDest {
+  width: 30rem;
+}
+
+@media (max-width: 520px) {
+  .formForDest {
+    width: 20em;
+  }
+  #imgChoosed {
+    width: 10rem;
+  }
+}
 
 /*# sourceMappingURL=style.css.map */
