@@ -31,6 +31,8 @@ let defaultDestinations = [
 
 ];
 
+let isConnected = false;
+let utilisateur = '';
 
 // Constant variable which contains the html code of the index page
 const index = `
@@ -47,8 +49,8 @@ const index = `
 `;
 
 // Constant variable which contains the html code of the Destinations page
-const destinations = `
-    <button id="add_new" class="btn btn-primary mt-5 mb-5" onclick="newDest()">Nouvelle destination</button>
+let destinations =`
+    <div id="addNewDestBtn"></div>
     <div class="container ms-lg-2 me-lg-2">
         <div id="destinations" class="row justify-content-center"></div>
     </div>
@@ -177,6 +179,9 @@ const destInfos = `
 // 'main' id (without it, the action is done before the html page is loaded and it causes an error)
 window.onload = (() => {
     document.getElementById('main').innerHTML = index;
+    $("#loginModal").on('shown.bs.modal', () => {
+        setupFormEvent();
+    })
 })
 
 // Displays the stored image of the destination for the destination creation/modification page
@@ -285,20 +290,72 @@ function setupDestinations(navbarNeedsToClose = true){
                     rowToAdd +=
                     `</ul>
                 </div>
-            </div> 
-            
+            </div>`;
+            rowToAdd += isConnected ? `
             <div class="card-footer d-flex justify-content-between mb-1 pt-2">
                 <div class="">
                     <button type="button" class="btn btn-success">Réserver</button>
-                </div>
-                <div class="">
+                </div>` : '';
+            rowToAdd += (utilisateur=='admin' ? 
+                `<div class="">
                     <button type="button" onclick="editDest(${dest.getId})" class="btn btn-primary">Modifier</i></button>
                     <button type="button" onclick="delDest(${dest.getId})" class="btn btn-danger">Supprimer</i></button>
-                </div>
+                </div>` : '') + `
             </div>
         </div>`
         document.getElementById('destinations').innerHTML += rowToAdd;
     }
+}
+
+function setupFormEvent(){
+    console.log('setupFormEvent');
+    $("#loginForm").on('submit', (e) => {
+        e.preventDefault();
+        checkCredentials();
+    })
+}
+
+function checkCredentials(){
+    let username = $("#user").val();
+    let password = $("#pass").val();
+    $.ajax({
+            url: "src/connexion.php",
+            type:"POST",
+            data: {
+                login: username,
+                password: password
+            }
+        }).done(function (arg){
+            let infoUser = $('#informUser');
+            if(arg.includes('Erreur')){
+                infoUser.text('Erreur, vérifiez vos informations');
+                infoUser.css('color', 'red');
+            } else {
+                isConnected = true;
+                utilisateur = username;
+                $('#loginModalBody').html(arg);
+                $('#connexion').html('');
+                $('#usersData').html(
+                    `<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Espace perso
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" onclick="switchPage(perso)" href="#">Mes informations</a></li>
+                        <li><a class="dropdown-item" href="#">Messagerie</a></li>
+                        <li><a class="dropdown-item" href="#">Historique</a></li>
+                        <li><a class="dropdown-item" onclick="disconnect()" href="#">Déconnexion</a></li>
+                    </ul>`
+                );
+                if(utilisateur == 'admin'){
+                    destinations = '<button id="add_new" class="btn btn-primary mt-5 mb-5" onclick="newDest()">Nouvelle destination</button>' + destinations;
+                }
+                if(!!$('#destinations')){
+                    setupDestinations();
+                }
+                    
+            }
+        }
+    )
 }
 
 // Changes the 'main' div innerHtml to html code of the page the user wants to visit
@@ -310,8 +367,6 @@ function switchPage(page){
         console.log(bsCollapse);
         bsCollapse.toggle();
     }
-    
-
     document.getElementById('main').innerHTML = page;
 }
 
