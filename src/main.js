@@ -1,36 +1,22 @@
 // Instantiation of defaults destinations
-let defaultDestinations = [
-    new Destination(
-        'France', 
-        'medias/img/fr.jpg', 
-        ['Paris', 'Mont Saint Michel', 'Lyon', 'Nice'], 
-        2,
-        0
-    ),
-    new Destination(
-        'Italie', 
-        'medias/img/it.jpg', 
-        ['Rome', 'Venise', 'Turin'], 
-        2,
-        1
-    ),
-    new Destination(
-        'Islande', 
-        'medias/img/isl.jpg', 
-        ['Neige'], 
-        2,
-        2
-    ),
-    new Destination(
-        'Nouvelle-Zélande', 
-        'medias/img/nz.jpg', 
-        ['Moutons'], 
-        2,
-        3
-    ),
-
-];
-
+let defaultDestinations = [];
+$.ajax({
+    url: "src/datas/persistance.php",
+    type:"GET",
+}).done((arg) => {
+    let jsonAnswer = JSON.parse(arg);
+    for(const toto in jsonAnswer){
+        let dest = jsonAnswer[toto];
+        defaultDestinations.push(new Destination(
+            dest['destination'], 
+            dest['photo'], 
+            dest['circuit'], 
+            dest['tarif'],
+            dest['id']
+        ));
+        ;
+    }
+});
 let isConnected = false;
 let utilisateur = '';
 
@@ -221,10 +207,19 @@ function newDest(){
         let file    = await readFile(document.getElementById('photo').files[0]);
         let newDest = new Destination(form.elements['destination'].value, file,
             circuitFiltered, form.elements['tarif'].value, defaultDestinations[defaultDestinations.length-1].getId+1);
-        defaultDestinations.push(newDest);
-
-        //after creating the new destination, we push the user back to the destination page
-        setupDestinations(false);
+        $.ajax({
+            url: "src/datas/persistance.php",
+            type: "POST",
+            data: {
+                data: JSON.stringify(newDest.toJSObject()),
+                action: "update"
+            }
+        }).done((arg) => {
+            defaultDestinations.push(newDest);
+            //after creating the new destination, we push the user back to the destination page
+            setupDestinations(false);
+            })
+        
     })
 }
 
@@ -233,7 +228,14 @@ function delDest(id){
     // we filter the destinations list to only keep the destinations with an id different from the one
     // the user wants to delete
     defaultDestinations = defaultDestinations.filter(dest => dest.id!=id);
-    setupDestinations(false);
+    $.ajax({
+        url: "src/datas/persistance.php",
+        type: "POST",
+        data: {
+            data: id,
+            action: "delete"
+        }
+    }).done(setupDestinations(false));
 }
 
 // Displays the destInfos page and loads all the informations of the destination the user wants to edit
@@ -264,7 +266,17 @@ function editDest(id){
         destToEdit.setCircuit = circuitFiltered;
         destToEdit.setDestination = form.elements['destination'].value;
         destToEdit.setTarif = form.elements['tarif'].value;
-        setupDestinations(false);
+        $.ajax({
+            url: "src/datas/persistance.php",
+            type: "POST",
+            data: {
+                data: JSON.stringify(destToEdit.toJSObject()),
+                action: "update"
+            }
+        }).done((arg) => {
+                setupDestinations(false);
+            })
+        
     });
 
 }
