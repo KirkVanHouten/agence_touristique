@@ -52,7 +52,7 @@ const index = `
 let destinations =`
     <div id="addNewDestBtn"></div>
     <div class="container ms-lg-2 me-lg-2">
-        <div id="destinations" class="row justify-content-center"></div>
+        <div id="destList" class="row justify-content-center"></div>
     </div>
     <button id="up"><a href="#">&#8593;</a></button>
 `;
@@ -292,10 +292,10 @@ function setupDestinations(navbarNeedsToClose = true){
                 </div>
             </div>`;
             rowToAdd += isConnected ? `
-            <div class="card-footer d-flex justify-content-between mb-1 pt-2">
-                <div class="">
+            <div class="card-footer d-flex justify-content-between mb-1 pt-2">` +
+                (utilisateur == 'user' ? `<div class="">
                     <button type="button" class="btn btn-success">Réserver</button>
-                </div>` : '';
+                </div>` : '') : '';
             rowToAdd += (utilisateur=='admin' ? 
                 `<div class="">
                     <button type="button" onclick="editDest(${dest.getId})" class="btn btn-primary">Modifier</i></button>
@@ -303,7 +303,7 @@ function setupDestinations(navbarNeedsToClose = true){
                 </div>` : '') + `
             </div>
         </div>`
-        document.getElementById('destinations').innerHTML += rowToAdd;
+        document.getElementById('destList').innerHTML += rowToAdd;
     }
 }
 
@@ -315,18 +315,25 @@ function setupFormEvent(){
     })
 }
 
+function disconnect(){
+    window.location.reload();
+}
+
 function checkCredentials(){
     let username = $("#user").val();
     let password = $("#pass").val();
+    let infoUser = $('#informUser');
+    infoUser.text('');
+    infoUser.css('color', 'black');
     $.ajax({
-            url: "src/connexion.php",
+            url: "src/auth/connexion.php",
             type:"POST",
             data: {
                 login: username,
                 password: password
             }
         }).done(function (arg){
-            let infoUser = $('#informUser');
+            
             if(arg.includes('Erreur')){
                 infoUser.text('Erreur, vérifiez vos informations');
                 infoUser.css('color', 'red');
@@ -349,7 +356,7 @@ function checkCredentials(){
                 if(utilisateur == 'admin'){
                     destinations = '<button id="add_new" class="btn btn-primary mt-5 mb-5" onclick="newDest()">Nouvelle destination</button>' + destinations;
                 }
-                if(!!$('#destinations')){
+                if($('#destList').length){
                     setupDestinations();
                 }
                     
