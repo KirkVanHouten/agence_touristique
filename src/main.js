@@ -84,13 +84,13 @@ const voyage_audio = `
     </div>
     <hr>
     <div>
-        <h2>Musique mélancolique à écouter au bord de la plage</h2>
-        <a href="medias/audio/guts-theme-By-Tuna.mp3">Ecouter</a>
+        <h2>Feu de camp</h2>
+        <a href="medias/audio/feuer.mp3">Ecouter</a>
     </div>
     <hr>
     <div>
-        <h2>Musique d'ambiance vieille salle des fêtes</h2>
-        <a href="medias/audio/the-backrooms-By-Tuna.mp3">Ecouter</a>
+        <h2>Bruits de pluie</h2>
+        <a href="medias/audio/rain01.mp3">Ecouter</a>
     </div>
     <hr>
     <div>
