@@ -37,10 +37,12 @@ const index = `
 // Constant variable which contains the html code of the Destinations page
 let destinations =`
     <div id="addNewDestBtn"></div>
-    <div class="container ms-lg-2 me-lg-2">
+    <div class="container ms-lg-2 me-lg-2 mt-4">
         <div id="destList" class="row justify-content-center"></div>
     </div>
-    <button id="up"><a href="#">&#8593;</a></button>
+    <button id="up" class="btn btn-primary d-flex justify-content-center align-items-center" onclick="goTop()">
+        <span class="material-symbols-outlined">arrow_upward</span>
+    </button>
 `;
 
 // Constant variable which contains the html code of the Espace perso/Mes informations page
@@ -139,22 +141,24 @@ const contact = `
 const destInfos = `
     <div class="card mt-4 formForDest">
     <form class="card-body" method="post" id="formEvent">
-        <div class="mb-2">
-            <label class="form-label" for="destination">Destination : </label><br>
-            <input class="form-control" type="text" id="destination" name="destination" required><br>
+        <div>
+            <label class="form-label" for="destination">Destination : </label>
+            <input class="form-control" type="text" id="destination" name="destination" required>
+            <div id="nameWarning" class="form-text mb-2">
         </div>
-        <div class="mb-2">
-            <label class="form-label" for="photo">Photo : </label><br>
-            <img class="mb-2" id="imgChoosed" src=""/><br>
-            <input class="form-control" onchange="showImage()" type="file" id="photo" name="photo"><br>
+        <div>
+            <label class="form-label" for="photo">Photo : </label>
+            <img class="mb-2" id="imgChoosed" src=""/>
+            <input class="mb-2 form-control" onchange="showImage()" type="file" id="photo" name="photo">
         </div>
-        <div class="mb-2">
-            <label class="form-label" for="circuit">Circuit (séparer les activités par des virgules) : </label><br>
-            <textarea class="form-control" id="circuit" name="circuit" required placeholder="Activité1,Activité2,Activité3,..."></textarea><br>
+        <div>
+            <label class="form-label" for="circuit">Circuit (séparer les activités par des virgules) : </label>
+            <textarea class="form-control mb-2" id="circuit" name="circuit" required placeholder="Activité1,Activité2,Activité3,..."></textarea>
         </div>
-        <div class="mb-2">
-            <label class="form-label" for="tarif">Prix : </label><br>
-            <input class="form-control" type="number" id="tarif" name="tarif" required><br>
+        <div>
+            <label class="form-label" for="tarif">Prix : </label>
+            <input class="form-control" type="number" id="tarif" name="tarif" required>
+            <div id="tarifWarning" class="form-text mb-2"></div>
         </div>
         <button class="btn btn-outline-primary" id="submitDestInfos" type="submit"></button>
     </form>
@@ -189,6 +193,12 @@ function readFile(file){
     });
 }
 
+function nameIsUnique(name){
+    console.log('toto');
+    let nameIsExisting = defaultDestinations.filter(value => value.getDestination.toLowerCase() == name.toLowerCase());
+    return nameIsExisting.length==0;
+}
+
 // Sets the current page to the destInfos page and sets the registering of a destination's info into a new destination object
 function newDest(){
     document.getElementById('main').innerHTML = destInfos;
@@ -198,27 +208,44 @@ function newDest(){
     form.addEventListener('submit', async (event) => {
         // we do event.preventDefault to prevent the page to reload when the user sends the form
         event.preventDefault();
+        $("#tarifWarning").css('color', 'black');
+        $("#tarifWarning").text('');
+        $("#nameWarning").css('color', 'black');
+        $("#nameWarning").text("");
         //the next five lines generate an array containing all steps of a 'circuit' 
-        let circuitTmp = form.elements["circuit"].value;
-        let circuitSplitted = circuitTmp.split(',');
-        let circuitFiltered = circuitSplitted.filter((el) => {
-            return !!el;
-        });
-        let file    = await readFile(document.getElementById('photo').files[0]);
-        let newDest = new Destination(form.elements['destination'].value, file,
-            circuitFiltered, form.elements['tarif'].value, defaultDestinations[defaultDestinations.length-1].getId+1);
-        $.ajax({
-            url: "src/datas/persistance.php",
-            type: "POST",
-            data: {
-                data: JSON.stringify(newDest.toJSObject()),
-                action: "update"
+        if(form.elements['tarif'].value>0 && nameIsUnique(form.elements["destination"].value)){
+
+            let circuitTmp = form.elements["circuit"].value.split(' ').join("");
+            let circuitSplitted = circuitTmp.split(',');
+            let circuitFiltered = circuitSplitted.filter((el) => {
+                return !!el;
+            });
+            let file    = await readFile(document.getElementById('photo').files[0]);
+            let newDest = new Destination(form.elements['destination'].value, file,
+                circuitFiltered, form.elements['tarif'].value, defaultDestinations[defaultDestinations.length-1].getId+1);
+            $.ajax({
+                url: "src/datas/persistance.php",
+                type: "POST",
+                data: {
+                    data: JSON.stringify(newDest.toJSObject()),
+                    action: "update"
+                }
+            }).done((arg) => {
+                defaultDestinations.push(newDest);
+                //after creating the new destination, we push the user back to the destination page
+                setupDestinations(false);
+                })
+        }
+        else {
+            if(form.elements['tarif'].value<=0){
+                $("#tarifWarning").css('color', 'red');
+                $("#tarifWarning").text('Tarif entré invalide');
             }
-        }).done((arg) => {
-            defaultDestinations.push(newDest);
-            //after creating the new destination, we push the user back to the destination page
-            setupDestinations(false);
-            })
+            if(!nameIsUnique(form.elements['destination'].value)){
+                $("#nameWarning").css('color', 'red');
+                $("#nameWarning").text("Ce nom existe déjà");
+            }
+        }
         
     })
 }
@@ -251,31 +278,46 @@ function editDest(id){
     document.getElementById('circuit').value     = destToEdit.getCircuit.join(',');
     document.getElementById('tarif').value       = destToEdit.getTarif;
     document.getElementById('formEvent').addEventListener('submit', async (event) => {
-        let form = document.getElementById('formEvent');
         event.preventDefault();
-        let circuitTmp = form.elements["circuit"].value;
-        console.log(circuitTmp);
-        let circuitSplitted = circuitTmp.split(',');
-        console.log(circuitSplitted);
-        let circuitFiltered = circuitSplitted.filter((el) => {
-        return !!el;
-        });
-        if(document.getElementById('photo').files[0]){
-            destToEdit.setPhoto = await readFile(document.getElementById('photo').files[0]);
-        }
-        destToEdit.setCircuit = circuitFiltered;
-        destToEdit.setDestination = form.elements['destination'].value;
-        destToEdit.setTarif = form.elements['tarif'].value;
-        $.ajax({
-            url: "src/datas/persistance.php",
-            type: "POST",
-            data: {
-                data: JSON.stringify(destToEdit.toJSObject()),
-                action: "update"
+        let form = document.getElementById('formEvent');
+        $("#tarifWarning").css('color', 'black');
+        $("#tarifWarning").text('');
+        $("#nameWarning").css('color', 'black');
+        $("#nameWarning").text("");
+        if(form.elements['tarif'].value>0 && nameIsUnique(form.elements["destination"].value)){
+            let circuitTmp = form.elements["circuit"].value.split(' ').join("");
+            console.log(circuitTmp);
+            let circuitSplitted = circuitTmp.split(',');
+            console.log(circuitSplitted);
+            let circuitFiltered = circuitSplitted.filter((el) => {
+            return !!el;
+            });
+            if(document.getElementById('photo').files[0]){
+                destToEdit.setPhoto = await readFile(document.getElementById('photo').files[0]);
             }
-        }).done((arg) => {
-                setupDestinations(false);
-            })
+            destToEdit.setCircuit = circuitFiltered;
+            destToEdit.setDestination = form.elements['destination'].value;
+            destToEdit.setTarif = form.elements['tarif'].value;
+            $.ajax({
+                url: "src/datas/persistance.php",
+                type: "POST",
+                data: {
+                    data: JSON.stringify(destToEdit.toJSObject()),
+                    action: "update"
+                }
+            }).done((arg) => {
+                    setupDestinations(false);
+                })
+        } else {
+            if(form.elements['tarif'].value<=0){
+                $("#tarifWarning").css('color', 'red');
+                $("#tarifWarning").text('Tarif entré invalide');
+            }
+            if(!nameIsUnique(form.elements['destination'].value)){
+                $("#nameWarning").css('color', 'red');
+                $("#nameWarning").text("Ce nom existe déjà");
+            }
+        }
         
     });
 
@@ -331,6 +373,10 @@ function disconnect(){
     window.location.reload();
 }
 
+function goTop(){
+    window.scrollTo(0,0);
+}
+
 function checkCredentials(){
     let username = $("#user").val();
     let password = $("#pass").val();
@@ -366,7 +412,7 @@ function checkCredentials(){
                     </ul>`
                 );
                 if(utilisateur == 'admin'){
-                    destinations = '<button id="add_new" class="btn btn-primary mt-5 mb-5" onclick="newDest()">Nouvelle destination</button>' + destinations;
+                    destinations = '<button id="add_new" class="btn btn-primary mt-4" onclick="newDest()">Nouvelle destination</button>' + destinations;
                 }
                 if($('#destList').length){
                     setupDestinations();
