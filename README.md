@@ -7,4 +7,4 @@
 
 **Remarque**
 Des musiques en "trop" sont présentes dans le répertoire medias/audio, elles ont été utilisé jusqu'à la fin du tp4
-en tant que musiques de test, ce sont donc ces dernières qui seront utilisées pour tout commit antérieur au commit "TP4 FINAL".
+en tant que musiques de test, ce sont donc ces dernières qui seront utilisées pour tout commit antérieur au commit "TP4 RENDU".
