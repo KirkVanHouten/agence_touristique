@@ -1,12 +1,15 @@
 // Instantiation of defaults destinations
 let defaultDestinations = [];
+// We call the persistance.php file to retrieve the list of destinations stored in source.json
 $.ajax({
     url: "src/datas/persistance.php",
     type:"GET",
 }).done((arg) => {
+    // Once we retrieve the json datas, we parse it and generate a destination object for each one received
     let jsonAnswer = JSON.parse(arg);
     for(const toto in jsonAnswer){
         let dest = jsonAnswer[toto];
+        // Finally we add the newly generated Destination in destinations list
         defaultDestinations.push(new Destination(
             dest['destination'], 
             dest['photo'], 
@@ -17,7 +20,11 @@ $.ajax({
         ;
     }
 });
+
+// Variables allowing us to know if the user is connected
 let isConnected = false;
+
+// Variable allowing us to know the user name (helps us to see if he is an admin or not)
 let utilisateur = '';
 
 // Constant variable which contains the html code of the index page
@@ -193,6 +200,7 @@ function readFile(file){
     });
 }
 
+// Checks if a destination name passed in parameters already exists or if it's unique
 function nameIsUnique(name){
     console.log('toto');
     let nameIsExisting = defaultDestinations.filter(value => value.getDestination.toLowerCase() == name.toLowerCase());
@@ -208,13 +216,16 @@ function newDest(){
     form.addEventListener('submit', async (event) => {
         // we do event.preventDefault to prevent the page to reload when the user sends the form
         event.preventDefault();
+        // We reinitialize the helpers text and color to avoid error indication if there is none
         $("#tarifWarning").css('color', 'black');
         $("#tarifWarning").text('');
         $("#nameWarning").css('color', 'black');
         $("#nameWarning").text("");
-        //the next five lines generate an array containing all steps of a 'circuit' 
+        
+        // We check if the price indicated is higher than zero and if the destination name inputed
+        // does not exists, if both statements are true, we create the destination object
         if(form.elements['tarif'].value>0 && nameIsUnique(form.elements["destination"].value)){
-
+            //the next five lines generate an array containing all steps of a 'circuit' 
             let circuitTmp = form.elements["circuit"].value.split(' ').join("");
             let circuitSplitted = circuitTmp.split(',');
             let circuitFiltered = circuitSplitted.filter((el) => {
@@ -223,6 +234,8 @@ function newDest(){
             let file    = await readFile(document.getElementById('photo').files[0]);
             let newDest = new Destination(form.elements['destination'].value, file,
                 circuitFiltered, form.elements['tarif'].value, defaultDestinations[defaultDestinations.length-1].getId+1);
+            // Once we created the destination object, we call the persistance.php file with an action of update to 
+            // modify the source.json file
             $.ajax({
                 url: "src/datas/persistance.php",
                 type: "POST",
@@ -231,11 +244,13 @@ function newDest(){
                     action: "update"
                 }
             }).done((arg) => {
+                // Once the ajax request is finished, we go back to destinations page and add the new destination to 
+                // the destinations list
                 defaultDestinations.push(newDest);
-                //after creating the new destination, we push the user back to the destination page
                 setupDestinations(false);
                 })
         }
+        // else we show a text below the wrong inputs showing the user what's wrong
         else {
             if(form.elements['tarif'].value<=0){
                 $("#tarifWarning").css('color', 'red');
@@ -255,6 +270,8 @@ function delDest(id){
     // we filter the destinations list to only keep the destinations with an id different from the one
     // the user wants to delete
     defaultDestinations = defaultDestinations.filter(dest => dest.id!=id);
+    // We call the persistance.php file with an action of delete and the id of the destination to delete
+    // to update the source.json file
     $.ajax({
         url: "src/datas/persistance.php",
         type: "POST",
@@ -262,7 +279,11 @@ function delDest(id){
             data: id,
             action: "delete"
         }
-    }).done(setupDestinations(false));
+    }).done( () => {
+        // Once the request is done, we push refresh the destinations page
+        setupDestinations(false)
+    });
+
 }
 
 // Displays the destInfos page and loads all the informations of the destination the user wants to edit
@@ -280,10 +301,13 @@ function editDest(id){
     document.getElementById('formEvent').addEventListener('submit', async (event) => {
         event.preventDefault();
         let form = document.getElementById('formEvent');
+        // We reinitialize the helpers text and color to avoid error indication if there is none
         $("#tarifWarning").css('color', 'black');
         $("#tarifWarning").text('');
         $("#nameWarning").css('color', 'black');
         $("#nameWarning").text("");
+        // We check if the price indicated is higher than zero and if the destination name inputed
+        // does not exists, if both statements are true, we modify the destination object
         if(form.elements['tarif'].value>0 && nameIsUnique(form.elements["destination"].value)){
             let circuitTmp = form.elements["circuit"].value.split(' ').join("");
             console.log(circuitTmp);
@@ -298,6 +322,8 @@ function editDest(id){
             destToEdit.setCircuit = circuitFiltered;
             destToEdit.setDestination = form.elements['destination'].value;
             destToEdit.setTarif = form.elements['tarif'].value;
+            // Once we modified the destination object, we call the persistance.php file with an action of update to 
+            // modify the source.json file
             $.ajax({
                 url: "src/datas/persistance.php",
                 type: "POST",
@@ -308,7 +334,9 @@ function editDest(id){
             }).done((arg) => {
                     setupDestinations(false);
                 })
-        } else {
+        } 
+        // else we show a text below the wrong inputs showing the user what's wrong
+        else {
             if(form.elements['tarif'].value<=0){
                 $("#tarifWarning").css('color', 'red');
                 $("#tarifWarning").text('Tarif entré invalide');
@@ -323,11 +351,12 @@ function editDest(id){
 
 }
 
+// Generate destinations cards for each destination in the destinations list
 function setupDestinations(navbarNeedsToClose = true){
     if(navbarNeedsToClose){
         switchPage(destinations);
     } else {
-        document.getElementById('main').innerHTML = destinations;
+        $('#main').html(destinations);
     }
     for(const dest of defaultDestinations){
         let rowToAdd = `
@@ -357,32 +386,36 @@ function setupDestinations(navbarNeedsToClose = true){
                 </div>` : '') + `
             </div>
         </div>`
-        document.getElementById('destList').innerHTML += rowToAdd;
+        $('#destList').html($('#destList').html()+rowToAdd);
     }
 }
 
+// Method called when the login popup is displayed to setup the form action
 function setupFormEvent(){
-    console.log('setupFormEvent');
     $("#loginForm").on('submit', (e) => {
         e.preventDefault();
         checkCredentials();
     })
 }
 
+// disconnects the user (by simply refreshing the page)
 function disconnect(){
     window.location.reload();
 }
 
+// Push the user to the top of the page
 function goTop(){
     window.scrollTo(0,0);
 }
 
+// Checks the credentials inputed by the user in the login form
 function checkCredentials(){
     let username = $("#user").val();
     let password = $("#pass").val();
     let infoUser = $('#informUser');
     infoUser.text('');
     infoUser.css('color', 'black');
+    // we call the connexion.php file to check if the credentials inputed are correct
     $.ajax({
             url: "src/auth/connexion.php",
             type:"POST",
@@ -391,11 +424,15 @@ function checkCredentials(){
                 password: password
             }
         }).done(function (arg){
-            
+            // Once it's done, we check what's returned by the file
+            // If it contains the text 'erreur' we show a text in red telling the user his credentials are wrong
             if(arg.includes('Erreur')){
                 infoUser.text('Erreur, vérifiez vos informations');
                 infoUser.css('color', 'red');
-            } else {
+            } 
+            // If the connection went well, we show the 'Espace perso' menu, hide the connection button
+            // and add the buttons corresponding to each role (user or admin)
+            else {
                 isConnected = true;
                 utilisateur = username;
                 $('#loginModalBody').html(arg);
@@ -414,6 +451,7 @@ function checkCredentials(){
                 if(utilisateur == 'admin'){
                     destinations = '<button id="add_new" class="btn btn-primary mt-4" onclick="newDest()">Nouvelle destination</button>' + destinations;
                 }
+                // if the user is logging in while being on the destinations page, we refresh the page
                 if($('#destList').length){
                     setupDestinations();
                 }
@@ -425,13 +463,13 @@ function checkCredentials(){
 
 // Changes the 'main' div innerHtml to html code of the page the user wants to visit
 function switchPage(page){
-    //the next three lines untoggle the navbar if it has been toggled (only for tablet and mobile modes)
+    //the next lines untoggle the navbar if it has been toggled (only for tablet and mobile modes)
     if(document.documentElement.clientWidth<992){
-        const menuToggle = document.getElementById('navbarSupportedContent');
+        const menuToggle = $('#navbarSupportedContent');
         const bsCollapse = new bootstrap.Collapse(menuToggle);
         console.log(bsCollapse);
         bsCollapse.toggle();
     }
-    document.getElementById('main').innerHTML = page;
+    $('#main').html(page);
 }
 
